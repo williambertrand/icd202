@@ -11,10 +11,17 @@ public class WorldManager : MonoBehaviour
     [SerializeField]
 	Transform[] obstaclePrefabs;
 
-	public float obstacleDensity = 1.0f; //Obstacle per square unit
-    public float obstacleProbability = 0.5f;
+    [SerializeField]
+	private float[] obstacleYScales;
 
-    public const float minDistance = 0.1f;
+	[Range(0.5f, 4.0f)]
+	public float obstacleDensity = 0.5f; //Obstacle per square unit
+
+	private const int unitToScaleFactor = 10;
+
+    public float obstacleProbability = 0.5f; //Disctribution of Blocking vs Hiding obstacles
+
+    public const float minDistance = 5.0f;
 
 	Transform obstacleContainer;
 
@@ -30,9 +37,11 @@ public class WorldManager : MonoBehaviour
 		numObstacles = (int)(
 			WorldBounds.width *
 			WorldBounds.height *
-			obstacleDensity
+			obstacleDensity /
+            unitToScaleFactor
 		);
-		obstacles = new Transform[numObstacles]; 
+		obstacles = new Transform[numObstacles];
+		ApplyObstacles();
     }
 
     public void ClearObstacles()
@@ -48,14 +57,31 @@ public class WorldManager : MonoBehaviour
 
 	public void ApplyObstacles() {
 
-        for(int  i = 0; i < numObstacles; i++)
+		Debug.Log("Applying World Obstacles: " + numObstacles);
+		int failedCount = 0;
+		for (int  i = 0; i < numObstacles; i++)
         {
-			Vector3 position = GetOpenPosition(minDistance, 0.0f, i); //Todo: will neeed to sample mesh for y value if non-flat ground
-			int obstacleType = Random.value > obstacleProbability ? BLOCKING : HIDING;
-			Transform instance = AddObstacle(position, obstacleType, 0.4f, 0.6f);
-			obstacles[i] = instance;
-        }
+            Vector3? position = GetOpenPosition(minDistance, 0.0f, i); //Todo: will neeed to sample mesh for y value if non-flat ground
+            if (position != null)
+            {
+				int obstacleType = Random.value >= obstacleProbability ? BLOCKING : HIDING;
+				Transform instance = AddObstacle((Vector3)position, obstacleType, 1.5f, 5.0f);
+				obstacles[i] = instance;
+			}
+            else
+            {
+				failedCount++;
+			}
+		}
 
+		Debug.Log("Failed placing Obstacles: " + failedCount);
+
+	}
+
+    public void Refresh()
+    {
+		ClearObstacles();
+		ApplyObstacles();
     }
 
 	public Transform AddObstacle(Vector3 position, int obstacleType, float minScale, float maxScale) {
@@ -63,51 +89,32 @@ public class WorldManager : MonoBehaviour
 		position.y += instance.transform.localScale.y * 0.5f;
 
 		float randScale = (maxScale - minScale) * Random.value + minScale;
-		Vector3 scale = new Vector3(randScale, 1.0f, randScale);
+		Vector3 scale = new Vector3(randScale, 1.0f / obstacleYScales[obstacleType], randScale);
 
 		//instance.localPosition = GroundMesh.SamplePoint(position); //IF we eever geenerate the greound mesh to have irregularities / noise then we'll need this
-
+		instance.localPosition = position;
 		instance.localScale = scale;
 		instance.SetParent(obstacleContainer, false);
 		return instance;
 	}
 
-
-	private Vector3 GetOpenPosition(float minDistance, float yValue, int index)
+    //Return null on failing to place down object
+	private Vector3? GetOpenPosition(float minDistance, float yValue, int index)
     {
-		int retryCount = 0;
-		Vector3 position = new Vector3(0,yValue,0);
-		bool placed = false;
-
-        while(!placed)
-        {
-			position.x = WorldBounds.xMin + (Random.value * WorldBounds.width);
-            position.z = WorldBounds.yMin + (Random.value * WorldBounds.height);
+		Vector3 position = new Vector3(0, yValue ,0);
+		position.x = WorldBounds.xMin + (Random.value * WorldBounds.width);
+        position.z = WorldBounds.yMin + (Random.value * WorldBounds.height);
 
 
-			for (int i = 0; i < index; i ++)
+		for (int i = 0; i < index - 1; i++)
+		{
+			Transform t = obstacles[i];
+			if (t != null && Vector3.Distance(t.position, position) < minDistance)
 			{
-				Transform t = obstacles[i];
-				if (Vector3.Distance(t.position, position) < minDistance)
-				{
-					retryCount++;
-					break;
-				}
-                else {
-                    if(i == index -1 )
-                    {
-						placed = true;
-                    }
-                }
+				return null;
 			}
-
 		}
-
-        if(retryCount >= 5)
-        {
-			Debug.LogError("Had to retry GetOpenPositon more that 5 times: " + retryCount);
-        }
+	
 		return position;
-
 	}
 }
