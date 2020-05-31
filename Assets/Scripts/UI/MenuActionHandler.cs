@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using static CanvasType;
+using static UI.CanvasType;
 using static UI.ButtonType;
 
 namespace UI
@@ -16,6 +16,9 @@ namespace UI
         RestartGame,
     }
     
+    /**
+     * Handle side effects when a menu button is selected.
+     */
     public class MenuActionHandler : MonoBehaviour
     {
         private CanvasManager _canvasManager;
