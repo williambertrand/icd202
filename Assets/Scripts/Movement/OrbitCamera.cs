@@ -40,7 +40,7 @@ public class OrbitCamera : MonoBehaviour {
 
 	}
 
-	/*If distance between the target and current focus points is greater than
+	/* If distance between the target and current focus points is greater than
      * the radius, pull the focus toward the target, using (1−c)^t as the
      * interpolator
      */

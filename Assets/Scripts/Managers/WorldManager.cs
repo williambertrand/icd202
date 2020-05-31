@@ -56,7 +56,7 @@ public class WorldManager : MonoBehaviour
 		{
 			Destroy(obstacleContainer.gameObject);
 		}
-		obstacleContainer = new GameObject("Features Container").transform;
+		obstacleContainer = new GameObject("Obstacles Container").transform;
 		obstacleContainer.SetParent(transform, false);
         obstacles = new Transform[numObstacles];
 	}
@@ -67,7 +67,7 @@ public class WorldManager : MonoBehaviour
 		{
 			Destroy(shellContainer.gameObject);
 		}
-		shellContainer = new GameObject("Features Container").transform;
+		shellContainer = new GameObject("Shells Container").transform;
 		shellContainer.SetParent(transform, false);
 	}
 
@@ -98,8 +98,6 @@ public class WorldManager : MonoBehaviour
 				failedCount++;
 			}
 		}
-
-		Debug.Log("Failed placing Obstacles: " + failedCount);
 
 	}
 
@@ -153,4 +151,10 @@ public class WorldManager : MonoBehaviour
 		instance.transform.SetParent(shellContainer, false);
 		instance.player = playerReference;
 	}
+
+
+    private void preventSpawnOverlap()
+    {
+
+    }
 }
