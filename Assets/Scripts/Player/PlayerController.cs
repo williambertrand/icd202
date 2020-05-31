@@ -13,6 +13,8 @@ public enum PlayerState
 public class PlayerController : MonoBehaviour
 {
 
+    public static PlayerController Instance;
+
     const int MAX_SHELLS = 10;
 
     public Text carryValueText;
@@ -45,6 +47,14 @@ public class PlayerController : MonoBehaviour
 
     private Ray safeRay;
     private Renderer renderer;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
 
     // Start is called before the first frame update
