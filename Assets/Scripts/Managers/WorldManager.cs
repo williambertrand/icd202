@@ -31,6 +31,12 @@ public class WorldManager : MonoBehaviour
 	private const int BLOCKING = 0;
 	private const int HIDING = 1;
 
+	// SHELLS
+	public float shellUnderHidingProbability = 0.3f;
+	public ShellItem shellPrefab;
+	Transform shellContainer;
+	public PlayerController playerReference;
+
 
 	private void Awake()
     {
@@ -55,18 +61,37 @@ public class WorldManager : MonoBehaviour
         obstacles = new Transform[numObstacles];
 	}
 
+    public void ClearShells()
+	{
+		if (shellContainer)
+		{
+			Destroy(shellContainer.gameObject);
+		}
+		shellContainer = new GameObject("Features Container").transform;
+		shellContainer.SetParent(transform, false);
+	}
+
 	public void ApplyObstacles() {
 
 		Debug.Log("Applying World Obstacles: " + numObstacles);
 		int failedCount = 0;
 		for (int  i = 0; i < numObstacles; i++)
         {
-            Vector3? position = GetOpenPosition(minDistance, 0.0f, i); //Todo: will neeed to sample mesh for y value if non-flat ground
+            Vector3? position = GetOpenPosition(minDistance, 0.5f, i); //Todo: will neeed to sample mesh for y value if non-flat ground
             if (position != null)
             {
 				int obstacleType = Random.value >= obstacleProbability ? BLOCKING : HIDING;
 				Transform instance = AddObstacle((Vector3)position, obstacleType, 1.5f, 5.0f);
 				obstacles[i] = instance;
+
+                if(obstacleType == HIDING)
+                {
+					bool placeShell = Random.value >= shellUnderHidingProbability;
+                    if (placeShell)
+                    {
+						AddShell((Vector3)position);
+                    }
+                }
 			}
             else
             {
@@ -81,19 +106,21 @@ public class WorldManager : MonoBehaviour
     public void Refresh()
     {
 		ClearObstacles();
+		ClearShells();
 		ApplyObstacles();
     }
 
 	public Transform AddObstacle(Vector3 position, int obstacleType, float minScale, float maxScale) {
 		Transform instance = Instantiate(obstaclePrefabs[obstacleType]);
-		position.y += instance.transform.localScale.y * 0.5f;
 
 		float randScale = (maxScale - minScale) * Random.value + minScale;
-		Vector3 scale = new Vector3(randScale, 1.0f / obstacleYScales[obstacleType], randScale);
+		Vector3 scale = new Vector3(randScale, 1.0f * obstacleYScales[obstacleType], randScale);
 
-		//instance.localPosition = GroundMesh.SamplePoint(position); //IF we eever geenerate the greound mesh to have irregularities / noise then we'll need this
-		instance.localPosition = position;
+
+		//instance.localPosition = GroundMesh.SamplePoint(position); //IF we ever generate the greound mesh to have irregularities / noise then we'll need this
 		instance.localScale = scale;
+		position.y += obstacleType;
+		instance.localPosition = position;
 		instance.SetParent(obstacleContainer, false);
 		return instance;
 	}
@@ -116,5 +143,14 @@ public class WorldManager : MonoBehaviour
 		}
 	
 		return position;
+	}
+
+    private void AddShell(Vector3 position)
+    {
+		ShellItem instance = Instantiate(shellPrefab);
+		position.y += instance.transform.localScale.y * 0.5f;
+		instance.transform.localPosition = position;
+		instance.transform.SetParent(shellContainer, false);
+		instance.player = playerReference;
 	}
 }
