@@ -37,15 +37,16 @@ public class GameManager : MonoBehaviour
         stashText.text = "" + playerStats.shellStash;
         if(player.currentTripDist > MIN_DIST_REFRESH)
         {
-            //worldManager.Refresh();
-            //TODO: Bug with refresh not creating container objects on spawn and not deleteing on refresh
+            worldManager.Refresh();
         }
 
         player.CarryShells = 0;
+        player.playerstate = PlayerState.SAFE;
     }
 
     public void OnSafeZoneExit()
     {
         player.currentTripDist = 0;
+        player.playerstate = PlayerState.IN_OPEN;
     }
 }

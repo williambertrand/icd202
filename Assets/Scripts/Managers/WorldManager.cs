@@ -46,6 +46,8 @@ public class WorldManager : MonoBehaviour
 			obstacleDensity /
             unitToScaleFactor
 		);
+		ClearObstacles();
+		ClearShells();
 		obstacles = new Transform[numObstacles];
 		ApplyObstacles();
     }
