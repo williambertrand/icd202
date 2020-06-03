@@ -11,7 +11,7 @@ public class PlayerTrail : MonoBehaviour
     Transform[] nodePrefabs;
     int numNodePrefabs;
 
-    float nodeSpacing = 2.0f;
+    float nodeSpacing = 1.0f;
     float lastNodeDist = 0.0f;
 
     private int leg = 0;
@@ -77,7 +77,7 @@ public class PlayerTrail : MonoBehaviour
     public Transform AddNode(Vector3 position, Vector3 direction, float velocity)
     {
         int randNode = Random.Range(0, numNodePrefabs);
-        float randScale = (0.9f) * Random.value + 0.8f;
+        float randScale = (1.75f) * Random.value + 2.0f;
 
         Transform instance = Instantiate(nodePrefabs[randNode]);
 

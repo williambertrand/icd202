@@ -140,7 +140,7 @@ public class BirdEnemy : MonoBehaviour
         switch (state)
         {
             case BirdState.ROAMING:
-                return 20.0f;
+                return 24.0f;
             case BirdState.DIVING:
                 return 15.0f;
             case BirdState.GROUNDED:

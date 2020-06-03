@@ -639,7 +639,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 307495473}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1037,7 +1037,7 @@ MonoBehaviour:
   WorldBounds:
     serializedVersion: 2
     x: -50
-    y: 10
+    y: 15
     width: 100
     height: 75
   obstaclePrefabs:
