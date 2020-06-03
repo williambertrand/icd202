@@ -40,7 +40,8 @@ public class PlayerController : MonoBehaviour
 
     private int carryShells;
 
-    public int HungerLevel { get; set; }
+    public int Health { get; set; }
+    public int MaxHealth = 5;
 
     public PlayerState playerstate;
     public float currentTripDist;
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
         {
             Instance = this;
         }
+        Health = MaxHealth;
     }
 
 
@@ -82,19 +84,25 @@ public class PlayerController : MonoBehaviour
     {
         int layerMask = 1 << 8;
         RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
         if (Physics.Raycast(transform.position, Vector3.up, out hit, 2.5f, layerMask))
         {
-            Debug.DrawRay(transform.position, Vector3.up * hit.distance, Color.green);
-            //Get the Renderer component from the new cube
-
-            //Call SetColor using the shader property name "_Color" and setting the color to red
-            renderer.material.SetColor("_EmissionColor", Color.green);
+            playerstate = PlayerState.HIDING;
         }
         else
         {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * 1000, Color.white);
-            renderer.material.SetColor("_EmissionColor", Color.blue);
+            playerstate = PlayerState.IN_OPEN;
+        }
+    }
+
+    public void EatItem(int value)
+    {
+        if (Health + value > MaxHealth)
+        {
+            Health = MaxHealth;
+        }
+        else
+        {
+            Health += value;
         }
     }
 }
