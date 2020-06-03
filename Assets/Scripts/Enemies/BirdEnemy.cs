@@ -19,6 +19,7 @@ public class BirdEnemy : MonoBehaviour
     private Vector3 divePosition;
 
     private const float REACH_DIST = 1.0f;
+    private const int BIRD_DAMAGE = 1;
 
     //For testing
     public float DistToPlayer = 0.0f;
@@ -28,6 +29,7 @@ public class BirdEnemy : MonoBehaviour
     public const float FlySpeed = 15.0f;
     public const float GroundSpeed = 7.5f;
     public const float DiveSpeed = 25.0f;
+
 
 
 
@@ -168,9 +170,9 @@ public class BirdEnemy : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("GAMEOVER!!!");
-            //Player.Instance.takeDamage(birdDamage);
+            PlayerController.Instance.TakeDamage(BIRD_DAMAGE);
         }
     }
+
 
 }

@@ -40,14 +40,13 @@ public class PlayerController : MonoBehaviour
 
     private int carryShells;
 
-    public int Health { get; set; }
+    public int Health;
     public int MaxHealth = 5;
 
     public PlayerState playerstate;
     public float currentTripDist;
 
-    private Ray safeRay;
-    private Renderer renderer;
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
@@ -56,6 +55,7 @@ public class PlayerController : MonoBehaviour
             Instance = this;
         }
         Health = MaxHealth;
+
     }
 
 
@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
         currentTripDist = 0;
         playerstate = PlayerState.SAFE;
 
-        renderer = GetComponent<Renderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -103,6 +103,32 @@ public class PlayerController : MonoBehaviour
         else
         {
             Health += value;
+        }
+    }
+
+    public void TakeDamage(int value)
+    {
+        if (Health - value <= 0)
+        {
+            //GameManager.Instance.EndGame();
+        }
+        else
+        {
+            Health -= value;
+            StartCoroutine("FlashDamage");
+        }
+    }
+
+
+    //Flash red when taking damage
+    IEnumerator FlashDamage()
+    {
+        for (int n = 0; n < 3; n++)
+        {
+            spriteRenderer.color = new Color(1f, 0f, 0f, 0.75f);
+            yield return new WaitForSeconds(0.1f);
+            spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }
