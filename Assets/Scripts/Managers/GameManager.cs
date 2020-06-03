@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
 
         player.CarryShells = 0;
         player.playerstate = PlayerState.SAFE;
+        PlayerTrail.Instance.ClearTrail();
     }
 
     public void OnSafeZoneExit()
