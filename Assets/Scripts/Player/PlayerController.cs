@@ -13,7 +13,7 @@ public enum PlayerState
 public class PlayerController : MonoBehaviour
 {
 
-    public static PlayerController Instance;
+    public static PlayerController Instance; 
 
     const int MAX_SHELLS = 10;
 
@@ -104,6 +104,8 @@ public class PlayerController : MonoBehaviour
         {
             Health += value;
         }
+
+        PlayerHealthBar.Instance.UpdateHealthValue(Health);
     }
 
     public void TakeDamage(int value)
@@ -117,6 +119,8 @@ public class PlayerController : MonoBehaviour
             Health -= value;
             StartCoroutine("FlashDamage");
         }
+
+        PlayerHealthBar.Instance.UpdateHealthValue(Health);
     }
 
 
