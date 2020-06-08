@@ -7,7 +7,7 @@ public class MovingSphere : MonoBehaviour
 	float maxSpeed = 10f;
 
 	[SerializeField, Range(0f, 100f)]
-	float maxAcceleration = 10f;
+	float maxAcceleration = 14f;
 
 	Vector3 velocity, desiredVelocity, lastPosition;
 
@@ -33,7 +33,10 @@ public class MovingSphere : MonoBehaviour
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 		desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
 
-		player.currentTripDist += Vector3.Distance(transform.position, lastPosition);
+        if(player.playerstate != PlayerState.SAFE)
+        {
+			player.currentTripDist += Vector3.Distance(transform.position, lastPosition);
+		}
 		lastPosition = transform.position;
 	}
 

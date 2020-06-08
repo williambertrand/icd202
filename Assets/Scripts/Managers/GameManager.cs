@@ -16,8 +16,10 @@ public class GameManager : MonoBehaviour
 
     public WorldManager worldManager;
 
+    private int lastStash = 0;
+    private const int EnemyDelta = 5; //Every 5 shells add more birds
 
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +44,15 @@ public class GameManager : MonoBehaviour
 
         player.CarryShells = 0;
         player.playerstate = PlayerState.SAFE;
+
+        PlayerTrail.Instance.ClearTrail();
+
+        if(playerStats.shellStash - lastStash > EnemyDelta)
+        {
+            EnemyManager.Instance.AddEnemies(2);
+        }
+
+        lastStash = playerStats.shellStash;
     }
 
     public void OnSafeZoneExit()

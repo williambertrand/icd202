@@ -13,6 +13,8 @@ public enum PlayerState
 public class PlayerController : MonoBehaviour
 {
 
+    public static PlayerController Instance; 
+
     const int MAX_SHELLS = 10;
 
     public Text carryValueText;
@@ -38,13 +40,29 @@ public class PlayerController : MonoBehaviour
 
     private int carryShells;
 
-    public int HungerLevel { get; set; }
+    public int Health;
+    public int MaxHealth = 5;
 
     public PlayerState playerstate;
     public float currentTripDist;
 
-    private Ray safeRay;
-    private Renderer renderer;
+    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        Health = MaxHealth;
+
+    }
+
+    public AudioClip onHit;
+    public AudioClip onEat;
+    public AudioClip onPickup;
+    AudioSource audioSource;
+    public float volume = 0.5f;
 
 
     // Start is called before the first frame update
@@ -53,7 +71,8 @@ public class PlayerController : MonoBehaviour
         currentTripDist = 0;
         playerstate = PlayerState.SAFE;
 
-        renderer = GetComponent<Renderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -72,19 +91,62 @@ public class PlayerController : MonoBehaviour
     {
         int layerMask = 1 << 8;
         RaycastHit hit;
-        // Does the ray intersect any objects excluding the player layer
         if (Physics.Raycast(transform.position, Vector3.up, out hit, 2.5f, layerMask))
         {
-            Debug.DrawRay(transform.position, Vector3.up * hit.distance, Color.green);
-            //Get the Renderer component from the new cube
-
-            //Call SetColor using the shader property name "_Color" and setting the color to red
-            renderer.material.SetColor("_EmissionColor", Color.green);
+            playerstate = PlayerState.HIDING;
         }
         else
         {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * 1000, Color.white);
-            renderer.material.SetColor("_EmissionColor", Color.blue);
+            playerstate = PlayerState.IN_OPEN;
+        }
+    }
+
+    public void EatItem(int value)
+    {
+        if (Health + value > MaxHealth)
+        {
+            Health = MaxHealth;
+        }
+        else
+        {
+            Health += value;
+        }
+
+        PlayerHealthBar.Instance.UpdateHealthValue(Health);
+        audioSource.PlayOneShot(onEat, volume);
+    }
+
+    public void OnPickup()
+    {
+        audioSource.PlayOneShot(onPickup, volume);
+    }
+
+    public void TakeDamage(int value)
+    {
+        if (Health - value <= 0)
+        {
+            //GameManager.Instance.EndGame();
+        }
+        else
+        {
+            Health -= value;
+            StartCoroutine("FlashDamage");
+        }
+
+        PlayerHealthBar.Instance.UpdateHealthValue(Health);
+        audioSource.PlayOneShot(onHit, volume);
+    }
+
+
+    //Flash red when taking damage
+    IEnumerator FlashDamage()
+    {
+        for (int n = 0; n < 3; n++)
+        {
+            spriteRenderer.color = new Color(1f, 0f, 0f, 0.75f);
+            yield return new WaitForSeconds(0.1f);
+            spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }
