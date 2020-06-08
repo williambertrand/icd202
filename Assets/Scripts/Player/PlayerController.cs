@@ -58,6 +58,12 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public AudioClip onHit;
+    public AudioClip onEat;
+    public AudioClip onPickup;
+    AudioSource audioSource;
+    public float volume = 0.5f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +72,7 @@ public class PlayerController : MonoBehaviour
         playerstate = PlayerState.SAFE;
 
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -106,6 +113,12 @@ public class PlayerController : MonoBehaviour
         }
 
         PlayerHealthBar.Instance.UpdateHealthValue(Health);
+        audioSource.PlayOneShot(onEat, volume);
+    }
+
+    public void OnPickup()
+    {
+        audioSource.PlayOneShot(onPickup, volume);
     }
 
     public void TakeDamage(int value)
@@ -121,6 +134,7 @@ public class PlayerController : MonoBehaviour
         }
 
         PlayerHealthBar.Instance.UpdateHealthValue(Health);
+        audioSource.PlayOneShot(onHit, volume);
     }
 
 

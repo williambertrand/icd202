@@ -10,6 +10,7 @@ public class ShellItem : Item
         if (other.gameObject.CompareTag("Player"))
         {
             player.CarryShells = player.CarryShells + 1;
+            player.OnPickup();
             Destroy(gameObject);
         }
         else

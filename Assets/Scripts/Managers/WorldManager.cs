@@ -97,7 +97,7 @@ public class WorldManager : MonoBehaviour
                 {
 					Vector3 poolPos = (Vector3)position;
 					poolPos.y = 0.1f;
-					Transform poolInstance = AddPool(poolPos, 4.0f, 6.0f, 1, 3);
+					Transform poolInstance = AddPool(poolPos, 4.0f, 6.0f, 0, 2);
 					obstacles[i] = poolInstance;
 					continue;
                 }
@@ -160,7 +160,7 @@ public class WorldManager : MonoBehaviour
         {
 			Vector3 dir = Utils.GetRandomDirection();
 			Vector3 barnaclePos = position + (poolRadius * dir);
-			float barnacleScale = (2.0f) * Random.value + 1.5f;
+			float barnacleScale = (4.0f) * Random.value + 2.5f;
 			Transform barnalce = Instantiate(barnaclePrefabs[Random.Range(0, barnaclePrefabs.Length)]);
 			barnalce.position = barnaclePos;
 			barnalce.localRotation = Quaternion.Euler(45, 0, 0);
@@ -199,12 +199,6 @@ public class WorldManager : MonoBehaviour
 		instance.transform.SetParent(shellContainer, false);
 		instance.player = playerReference;
 	}
-
-
-    private void preventSpawnOverlap()
-    {
-
-    }
 
 
 

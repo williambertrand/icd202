@@ -12,7 +12,7 @@ public class PlayerTrail : MonoBehaviour
     int numNodePrefabs;
 
     float nodeSpacing = 1.0f;
-    float lastNodeDist = 0.0f;
+    public float lastNodeDist = 0.0f;
 
     private int leg = 0;
     private const int numLegs = 6;
@@ -29,11 +29,6 @@ public class PlayerTrail : MonoBehaviour
         {
             Instance = this;
         }
-    }
-
-    void Start()
-    {
-
     }
 
     // Update is called once per frame
@@ -67,6 +62,8 @@ public class PlayerTrail : MonoBehaviour
         }
         trailContainer = new GameObject("Trail Container").transform;
         trailContainer.SetParent(transform, false);
+        PlayerController.Instance.currentTripDist = 0;
+        lastNodeDist = 0;
     }
 
     /* Place a node at the current location

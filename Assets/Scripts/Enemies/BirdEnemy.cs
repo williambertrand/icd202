@@ -18,7 +18,7 @@ public class BirdEnemy : MonoBehaviour
     private Vector3 roamPosition;
     private Vector3 divePosition;
 
-    private const float REACH_DIST = 1.0f;
+    private const float REACH_DIST = 3.0f;
     private const int BIRD_DAMAGE = 1;
 
     //For testing
@@ -29,9 +29,6 @@ public class BirdEnemy : MonoBehaviour
     public const float FlySpeed = 15.0f;
     public const float GroundSpeed = 7.5f;
     public const float DiveSpeed = 25.0f;
-
-
-
 
     private float moveSpeed;
 
@@ -58,6 +55,17 @@ public class BirdEnemy : MonoBehaviour
     {
 
         CheckForTarget();
+
+        if(hasTarget)
+        {
+            Debug.DrawRay(transform.position, targetPosition);
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, roamPosition);
+        }
+
+        CheckForReset();
 
         switch (state)
         {
@@ -97,10 +105,8 @@ public class BirdEnemy : MonoBehaviour
                 }
                 break;
             case BirdState.GROUNDED:
-                if (Vector3.Distance(transform.position, targetPosition) < REACH_DIST)
-                {
-                    //Reached target position
-                }
+                transform.LookAt(targetPosition);
+                moveDir = (targetPosition - transform.position).normalized;
                 break;
 
 
@@ -134,6 +140,15 @@ public class BirdEnemy : MonoBehaviour
         }
     }
 
+    private void CheckForReset()
+    {
+        if(transform.position.y < 0)
+        {
+            state = BirdState.ROAMING;
+            transform.position = startingPositon;
+            roamPosition = GetRoamingPosition();
+        }
+    }
 
     private float GetRangeByState()
     {
@@ -144,7 +159,7 @@ public class BirdEnemy : MonoBehaviour
             case BirdState.DIVING:
                 return 15.0f;
             case BirdState.GROUNDED:
-                return 4.0f;
+                return 8.0f;
             default:
                 return 0.0f;
         }
@@ -171,6 +186,11 @@ public class BirdEnemy : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             PlayerController.Instance.TakeDamage(BIRD_DAMAGE);
+
+            roamPosition = GetRoamingPosition();
+            transform.LookAt(roamPosition);
+            moveDir = (roamPosition - transform.position).normalized;
+            state = BirdState.CLIMBING;
         }
     }
 
