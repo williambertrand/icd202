@@ -46,7 +46,9 @@ public class PlayerHealthBar : MonoBehaviour
 
         for (int i = 0; i < MaxValue; i++)
         {
+
             float xPos = i * delta;
+            Debug.Log("Adding health max:" + MaxValue + " at xPos: " + xPos);
 
             fullImages[i] = Instantiate<Image>(fullImage);
             fullImages[i].enabled = true;

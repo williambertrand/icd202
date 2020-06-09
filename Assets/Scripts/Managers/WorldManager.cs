@@ -9,7 +9,10 @@ public class WorldManager : MonoBehaviour
 	Rect WorldBounds = new Rect(-5f, -5f, 10f, 10f);
 
     [SerializeField]
-	Transform[] obstaclePrefabs;
+	Transform[] hidingPrefabs;
+
+	[SerializeField]
+	Transform[] blockingPrefabs;
 
 	[SerializeField]
 	Transform poolPrefab;
@@ -103,7 +106,7 @@ public class WorldManager : MonoBehaviour
                 }
 
 				int obstacleType = Random.value >= obstacleTypeProbability ? BLOCKING : HIDING;
-                Transform instance = AddObstacle((Vector3)position, obstacleType, 1.5f, 5.0f);
+                Transform instance = AddObstacle((Vector3)position, obstacleType, 0.75f, 3.0f);
 				obstacles[i] = instance;
 
                 if(obstacleType == HIDING)
@@ -131,7 +134,18 @@ public class WorldManager : MonoBehaviour
     }
 
 	public Transform AddObstacle(Vector3 position, int obstacleType, float minScale, float maxScale) {
-		Transform instance = Instantiate(obstaclePrefabs[obstacleType]);
+
+		Transform obstaclePrefab;
+
+        if(obstacleType == HIDING)
+        {
+			obstaclePrefab = hidingPrefabs[Random.Range(0, hidingPrefabs.Length)];
+
+		} else {
+			obstaclePrefab = blockingPrefabs[Random.Range(0, blockingPrefabs.Length)];
+		}
+
+        Transform instance = Instantiate(obstaclePrefab);
 
 		float randScale = (maxScale - minScale) * Random.value + minScale;
 		Vector3 scale = new Vector3(randScale, 1.0f * obstacleYScales[obstacleType], randScale);

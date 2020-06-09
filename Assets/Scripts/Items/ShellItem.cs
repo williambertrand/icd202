@@ -9,7 +9,6 @@ public class ShellItem : Item
         //This is probably unnecesarry as only collison will be with player?
         if (other.gameObject.CompareTag("Player"))
         {
-            player.CarryShells = player.CarryShells + 1;
             player.OnPickup();
             Destroy(gameObject);
         }

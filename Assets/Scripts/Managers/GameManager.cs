@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
     public PlayerController player;
 
     //TODO: playerStash UI
-    public Text stashText;
+    public TextMeshProUGUI stashText;
 
     public WorldManager worldManager;
 
@@ -35,15 +36,15 @@ public class GameManager : MonoBehaviour
      */
     public void OnSafeZoneEnter()
     {
-        playerStats.shellStash += player.CarryShells;
+        playerStats.shellStash += player.GetCarryShells();
         stashText.text = "" + playerStats.shellStash;
         if(player.currentTripDist > MIN_DIST_REFRESH)
         {
             worldManager.Refresh();
         }
 
-        player.CarryShells = 0;
         player.playerstate = PlayerState.SAFE;
+        player.ResetCarry();
 
         PlayerTrail.Instance.ClearTrail();
 

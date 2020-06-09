@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public enum PlayerState
 {
@@ -17,28 +18,14 @@ public class PlayerController : MonoBehaviour
 
     const int MAX_SHELLS = 10;
 
-    public Text carryValueText;
-    public int CarryShells
-    {
-        get
-        {
-            return carryShells;
-        }
-        set
-        {
-            if (carryShells == MAX_SHELLS)
-            {
-                carryShells = MAX_SHELLS;
-            }
-            else
-            {
-                carryShells = value;
-            }
-            carryValueText.text = "" + carryShells;
-        }
-    }
+    public TextMeshProUGUI carryValueText;
+    public Image maxLabel;
 
     private int carryShells;
+    public int GetCarryShells()
+    {
+        return carryShells;
+    }
 
     public int Health;
     public int MaxHealth = 5;
@@ -55,6 +42,8 @@ public class PlayerController : MonoBehaviour
             Instance = this;
         }
         Health = MaxHealth;
+
+        maxLabel.enabled = false;
 
     }
 
@@ -119,6 +108,14 @@ public class PlayerController : MonoBehaviour
     public void OnPickup()
     {
         audioSource.PlayOneShot(onPickup, volume);
+
+        carryShells += 1;
+        if (carryShells >= MAX_SHELLS)
+        {
+            carryShells = MAX_SHELLS;
+            maxLabel.enabled = true;
+        }
+        carryValueText.text = "" + carryShells;
     }
 
     public void TakeDamage(int value)
@@ -135,6 +132,13 @@ public class PlayerController : MonoBehaviour
 
         PlayerHealthBar.Instance.UpdateHealthValue(Health);
         audioSource.PlayOneShot(onHit, volume);
+    }
+
+    public void ResetCarry()
+    {
+        carryShells = 0;
+        maxLabel.enabled = false;
+        carryValueText.text = "" + carryShells;
     }
 
 
