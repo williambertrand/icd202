@@ -7,7 +7,10 @@ public class EnemyManager : MonoBehaviour
 
     public BirdEnemy birdPrefab;
     public float numEnemies;
+    private float startEnemies;
     List<BirdEnemy> enemies;
+
+    Transform enemyContainer;
 
     public GameObject ground;
 
@@ -22,21 +25,15 @@ public class EnemyManager : MonoBehaviour
         {
             Instance = this;
         }
+        startEnemies = numEnemies;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        //Place enemies
-        enemies = new List<BirdEnemy>();
-        for(int i = 0; i < numEnemies; i++)
-        {
-            BirdEnemy birdEnemy = Instantiate<BirdEnemy>(birdPrefab);
-            enemies.Add(birdEnemy);
-        }
-
         groundMesh = ground.GetComponent<MeshFilter>().mesh;
-
+        ClearEnemies();
+        InstantiateEnemies();
         PlaceEnemies();
     }
 
@@ -48,6 +45,7 @@ public class EnemyManager : MonoBehaviour
         for(int i = 0; i < count; i++)
         {
             BirdEnemy birdEnemy = Instantiate<BirdEnemy>(birdPrefab);
+            birdEnemy.transform.SetParent(enemyContainer, false);
             enemies.Add(birdEnemy);
         }
 
@@ -75,5 +73,38 @@ public class EnemyManager : MonoBehaviour
                 enemies[e].transform.position = birdPosition;
             }
         }
+    }
+
+
+    public void ClearEnemies()
+    {
+        if (enemyContainer)
+        {
+            Destroy(enemyContainer.gameObject);
+        }
+        enemyContainer = new GameObject("Enemies Container").transform;
+        enemyContainer.SetParent(transform, false);
+        enemies = new List<BirdEnemy>();
+    }
+
+    private void InstantiateEnemies()
+    {
+        
+        for (int i = 0; i < numEnemies; i++)
+        {
+            BirdEnemy birdEnemy = Instantiate<BirdEnemy>(birdPrefab);
+            birdEnemy.transform.SetParent(enemyContainer, false);
+            enemies.Add(birdEnemy);
+        }
+
+    }
+
+    public void Reset()
+    {
+        Debug.Log("RESETING ENEMIES");
+        numEnemies = startEnemies;
+        ClearEnemies();
+        InstantiateEnemies();
+        PlaceEnemies();
     }
 }

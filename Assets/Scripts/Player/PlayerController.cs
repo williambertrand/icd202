@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI carryValueText;
     public Image maxLabel;
 
+    public MovingSphere Movement;
+
     private int carryShells;
     public int GetCarryShells()
     {
@@ -44,7 +46,8 @@ public class PlayerController : MonoBehaviour
         Health = MaxHealth;
 
         maxLabel.enabled = false;
-
+        Movement = GetComponent<MovingSphere>();
+        Movement.enabled = false;
     }
 
     public AudioClip onHit;
@@ -142,7 +145,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Health - value <= 0)
         {
-            //GameManager.Instance.EndGame();
+            GameManager.Instance.EndGame();
         }
         else
         {
@@ -185,6 +188,16 @@ public class PlayerController : MonoBehaviour
         carryShells = 0;
         maxLabel.enabled = false;
         carryValueText.text = "" + carryShells;
+    }
+
+    public void Restart()
+    {
+        carryShells = 0;
+        CurrentEnergy = MAX_ENERGY;
+        Health = MaxHealth;
+        PlayerHealthBar.Instance.UpdateHealthValue(Health);
+        transform.position = new Vector3(0, 0.5f, -21.5f);
+        Movement.enabled = true;
     }
 
 

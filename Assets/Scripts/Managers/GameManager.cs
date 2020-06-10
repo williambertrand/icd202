@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,20 +13,32 @@ public class GameManager : MonoBehaviour
     public PlayerStats playerStats;
     public PlayerController player;
 
-    //TODO: playerStash UI
     public TextMeshProUGUI stashText;
-
     public WorldManager worldManager;
+
 
     private int lastStash = 0;
     private const int EnemyDelta = 5; //Every 5 shells add more birds
 
+    public static GameManager Instance;
 
+    public CanvasManager canvasManager;
+    public TextMeshProUGUI GameOverText;
+
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         playerStats = new PlayerStats();
+
     }
 
     /**
@@ -54,11 +67,29 @@ public class GameManager : MonoBehaviour
         }
 
         lastStash = playerStats.shellStash;
+        player.ResetEnergy();
     }
 
     public void OnSafeZoneExit()
     {
         player.currentTripDist = 0;
         player.playerstate = PlayerState.IN_OPEN;
+    }
+
+    public void EndGame()
+    {
+        PlayerController.Instance.Movement.enabled = false;
+        GameOverText.text = $"You stashed {playerStats.shellStash} shells!";
+        canvasManager.SwitchCanvas(CanvasType.GameOver);
+    }
+
+
+    public void RestartGame()
+    {
+        playerStats.shellStash = 0;
+        PlayerController.Instance.Restart();
+        EnemyManager.Instance.Reset();
+        PlayerTrail.Instance.ClearTrail();
+        worldManager.Refresh();
     }
 }

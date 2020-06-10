@@ -31,6 +31,7 @@ namespace UI
     
         private void Awake()
         {
+
             _canvasControllers = GetComponentsInChildren<CanvasController>(true).ToDict(x => x.canvasType, x => x);
 
             SetActiveCanvas(CanvasType.MainMenu);
@@ -38,7 +39,6 @@ namespace UI
 
         private void SetActiveCanvas(CanvasType? type)
         {
-            Debug.Log($"Switching to canvas: {type}");
             _canvasControllers.ForEach((k, v) =>
             {
                 var isActive = v.gameObject.activeSelf;
@@ -52,7 +52,6 @@ namespace UI
 
         public void GoBackToLastCanvas()
         {
-            Debug.Log($"prewv: {_previousCanvas}");
             if (_previousCanvas == null) return;
         
             SetActiveCanvas(_previousCanvas ?? CanvasType.MainMenu);

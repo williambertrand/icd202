@@ -14,7 +14,7 @@ public class ShellItem : Item
         }
         else
         {
-            Debug.LogError("Collided with non player?!");
+            //Todo
         }
     }
 

@@ -23,6 +23,8 @@ namespace UI
     {
         private CanvasManager _canvasManager;
 
+        public GameManager gameManager;
+
         private void Awake()
         {
             _canvasManager = GameObject.FindGameObjectWithTag("Canvas").GetComponent<CanvasManager>();
@@ -34,6 +36,7 @@ namespace UI
             {
                 case StartGame:
                     _canvasManager.SwitchCanvas(GameUI);
+                    PlayerController.Instance.Movement.enabled = true;
                     break;
                 case ResumeGame:
                     _canvasManager.SwitchCanvas(GameUI);
@@ -54,6 +57,8 @@ namespace UI
                     #endif
                     break;
                 case RestartGame:
+                    Debug.Log("CANVAS RESTART!");
+                    GameManager.Instance.RestartGame();
                     _canvasManager.SwitchCanvas(GameUI);
                     break;
                 case OpenSettings:
