@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5329547311556649538}
   - component: {fileID: 5004422503068059567}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: New Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7618298153839780207}
-  m_Layer: 0
+  - component: {fileID: 8493986269476715012}
+  m_Layer: 8
   m_Name: Palm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,6 +114,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8493986269476715012
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2927429742529932043}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.36070156, z: 1.7879715}
+  m_Center: {x: 0, y: 0.074462414, z: -0.27960968}
 --- !u!1001 &1839861769566872477
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -194,6 +208,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: palm
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: eb631572811d846a0b1ed61ee0577d3c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb631572811d846a0b1ed61ee0577d3c, type: 3}

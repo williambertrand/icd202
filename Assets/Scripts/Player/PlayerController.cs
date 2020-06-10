@@ -53,6 +53,13 @@ public class PlayerController : MonoBehaviour
     AudioSource audioSource;
     public float volume = 0.5f;
 
+    public const float MAX_ENERGY = 100.0f;
+    public const float BARNACLE_ENERGY = 10.0f;
+    public float CurrentEnergy = MAX_ENERGY;
+    public float EneregyRegenSpeed = 10.0f;
+
+    public EnergyBar eneregyBar;
+
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +69,7 @@ public class PlayerController : MonoBehaviour
 
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
+        eneregyBar.SetMaxValue(MAX_ENERGY);
     }
 
     // Update is called once per frame
@@ -71,6 +79,16 @@ public class PlayerController : MonoBehaviour
         if(playerstate != PlayerState.SAFE)
         {
             CheckPlayerState();
+        }
+
+        switch (playerstate)
+        {
+            case PlayerState.HIDING:
+                float value = Time.deltaTime * EneregyRegenSpeed;
+                RegenEnergy(value);
+                break;
+            default:
+                break;
         }
 
     }
@@ -100,6 +118,8 @@ public class PlayerController : MonoBehaviour
         {
             Health += value;
         }
+
+        RegenEnergy(BARNACLE_ENERGY);
 
         PlayerHealthBar.Instance.UpdateHealthValue(Health);
         audioSource.PlayOneShot(onEat, volume);
@@ -132,6 +152,32 @@ public class PlayerController : MonoBehaviour
 
         PlayerHealthBar.Instance.UpdateHealthValue(Health);
         audioSource.PlayOneShot(onHit, volume);
+    }
+
+    public void UseEnergy(float value)
+    {
+        CurrentEnergy -= value;
+        if (CurrentEnergy < 0)
+        {
+            CurrentEnergy = 0;
+        }
+        eneregyBar.SetValue(CurrentEnergy);
+    }
+
+    public void RegenEnergy(float value)
+    {
+        CurrentEnergy += value;
+        if (CurrentEnergy > MAX_ENERGY)
+        {
+            CurrentEnergy = MAX_ENERGY;
+        }
+        eneregyBar.SetValue(CurrentEnergy);
+    }
+
+    public void ResetEnergy()
+    {
+        CurrentEnergy = MAX_ENERGY;
+        eneregyBar.SetValue(CurrentEnergy);
     }
 
     public void ResetCarry()

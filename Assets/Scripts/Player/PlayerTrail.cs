@@ -74,13 +74,13 @@ public class PlayerTrail : MonoBehaviour
     public Transform AddNode(Vector3 position, Vector3 direction, float velocity)
     {
         int randNode = Random.Range(0, numNodePrefabs);
-        float randScale = (1.75f) * Random.value + 2.0f;
+        float randScale = (2.0f) * Random.value + 3.0f;
 
         Transform instance = Instantiate(nodePrefabs[randNode]);
 
 
         instance.localPosition = position;
-        instance.localScale = new Vector3(randScale, 1.0f, randScale);
+        instance.localScale = new Vector3(randScale, randScale, 1.0f);
         instance.rotation = Quaternion.Euler(90, 0, 0);
         instance.SetParent(trailContainer, false);
         return instance;
