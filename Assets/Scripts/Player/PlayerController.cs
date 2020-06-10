@@ -103,10 +103,22 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.up, out hit, 2.5f, layerMask))
         {
+
+            if(playerstate == PlayerState.IN_OPEN)
+            {
+                //Change to shaded color
+                spriteRenderer.color = new Color(0.6f, 0.6f, 0.8f, 0.75f);
+            }
+
             playerstate = PlayerState.HIDING;
         }
         else
         {
+            if (playerstate == PlayerState.HIDING)
+            {
+                //remove shaded color
+                spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+            }
             playerstate = PlayerState.IN_OPEN;
         }
     }
@@ -128,8 +140,14 @@ public class PlayerController : MonoBehaviour
         audioSource.PlayOneShot(onEat, volume);
     }
 
-    public void OnPickup()
+    public bool OnPickup()
     {
+
+        if(carryShells == MAX_SHELLS)
+        {
+            return false;
+        }
+
         audioSource.PlayOneShot(onPickup, volume);
 
         carryShells += 1;
@@ -139,6 +157,8 @@ public class PlayerController : MonoBehaviour
             maxLabel.enabled = true;
         }
         carryValueText.text = "" + carryShells;
+
+        return true;
     }
 
     public void TakeDamage(int value)

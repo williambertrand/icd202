@@ -9,12 +9,11 @@ public class ShellItem : Item
         //This is probably unnecesarry as only collison will be with player?
         if (other.gameObject.CompareTag("Player"))
         {
-            player.OnPickup();
-            Destroy(gameObject);
-        }
-        else
-        {
-            //Todo
+            bool pickedUp = player.OnPickup();
+            if (pickedUp)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

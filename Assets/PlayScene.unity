@@ -2118,7 +2118,7 @@ MonoBehaviour:
   maxSpeed: 12
   minSpeed: 7
   maxAcceleration: 20
-  EnergyUse: 25
+  EnergyUse: 30
 --- !u!54 &307495480
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2159,7 +2159,7 @@ MonoBehaviour:
   onPickup: {fileID: 8300000, guid: d6c01d412b6cf4752b03eb1454c1b83d, type: 3}
   volume: 0.5
   CurrentEnergy: 100
-  EneregyRegenSpeed: 10
+  EneregyRegenSpeed: 8
   eneregyBar: {fileID: 937054752}
 --- !u!82 &307495482
 AudioSource:

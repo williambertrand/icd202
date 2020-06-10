@@ -57,7 +57,6 @@ namespace UI
                     #endif
                     break;
                 case RestartGame:
-                    Debug.Log("CANVAS RESTART!");
                     GameManager.Instance.RestartGame();
                     _canvasManager.SwitchCanvas(GameUI);
                     break;
