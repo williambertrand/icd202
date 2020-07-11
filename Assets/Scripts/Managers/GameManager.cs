@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     public CanvasManager canvasManager;
     public TextMeshProUGUI GameOverText;
 
+    public bool isGameOver = false;
+
 
     private void Awake()
     {
@@ -78,9 +80,14 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
+        if (isGameOver) return;
+
+        isGameOver = true;
         PlayerController.Instance.Movement.enabled = false;
         GameOverText.text = $"You stashed {playerStats.shellStash} shells!";
         canvasManager.SwitchCanvas(CanvasType.GameOver);
+        LeaderBoardService.Instance.gamePlayerScore = playerStats.shellStash;
+        LeaderBoardService.Instance.ShowLeaderBoardForPlayerScore(playerStats.shellStash);
     }
 
 
@@ -91,5 +98,6 @@ public class GameManager : MonoBehaviour
         EnemyManager.Instance.Reset();
         PlayerTrail.Instance.ClearTrail();
         worldManager.Refresh();
+        isGameOver = false;
     }
 }

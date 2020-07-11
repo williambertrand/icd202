@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DistToPlayer: 0
+  maxAcceleration: 50.2
   state: 0
   hasTarget: 0
 --- !u!136 &7328480535290298777

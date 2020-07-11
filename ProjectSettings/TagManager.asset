@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Canvas
+  - NameLabel
+  - PosLabel
+  - ScoreLabel
   layers:
   - Default
   - TransparentFX
